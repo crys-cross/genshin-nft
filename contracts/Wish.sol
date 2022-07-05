@@ -27,5 +27,24 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     // Events
     event NftRequested(uint256 indexed requestId, address requester);
 
-    constructor() VRFConsumerBaseV2() ERC721() {}
+    // constructor(
+    //     address vrfCoordinatorV2,
+    //     uint256 entranceFee,
+    //     bytes32 gasLane,
+    //     uint64 subscriptionId,
+    //     uint32 callbackGasLimit,
+    //     uint256 interval
+    // ) VRFConsumerBaseV2(vrfCoordinatorV2) {
+    //     i_entranceFee = entranceFee;
+    //     i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2);
+    //     i_gasLane = gasLane;
+    //     i_subscriptionId = subscriptionId;
+    //     i_callbackGasLimit = callbackGasLimit;
+    // }
 }
+
+//TODO
+//track players pulls(mapping or array)
+//set percent chance of minting 5star nft per number of pulls
+//set function to reset chances when 5star is minted or 90th mint(since 5star guarantee in 90th pull)
+//set vrf and functions per percentage

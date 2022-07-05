@@ -7,3 +7,4 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
     : describe("Raffle Unit Test", () => {
           let raffle, VRFCoordinatorV2Mock, raffleEntranceFee, deployer, interval
           const chainId = network.config.chainId
+      })
