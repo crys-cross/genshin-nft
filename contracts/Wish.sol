@@ -44,7 +44,9 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
 }
 
 //TODO
-//track players pulls(mapping or array)
-//set percent chance of minting 5star nft per number of pulls
-//set function to reset chances when 5star is minted or 90th mint(since 5star guarantee in 90th pull)
-//set vrf and functions per percentage
+//track players pulls(mapping or array)(wishCounter mapping)
+//guaranteeed 4/5star every 10th pull(2%-4star 98%-3star)
+// wishcounter resets if 5star drawn or 90th pull(since gauranteed 5star)
+//1%-5star 5%-4star 94%-3star
+//randomWords[0] random 3-5star
+//randomWords[1] (choose from 4star)(choose from 5star)
