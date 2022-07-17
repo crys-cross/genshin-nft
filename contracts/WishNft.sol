@@ -7,6 +7,8 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+error WishNft__NeedMoreETHSennt();
+
 contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     // Chainlink VRF Variables
     VRFCoordinatorV2Interface private immutable i_vrfCoordinator;
@@ -14,7 +16,7 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     bytes32 private immutable i_gasLane;
     uint32 private immutable i_callbackGasLimit;
     uint16 private constant REQUEST_CONFIRMATIONS = 3;
-    uint32 private constant NUM_WORDS = 1;
+    uint32 private constant NUM_WORDS = 3;
 
     // VRF Helpers
     mapping(uint256 => address) public s_requestIdToSender;
@@ -27,20 +29,35 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     // Events
     event NftRequested(uint256 indexed requestId, address requester);
 
-    // constructor(
-    //     address vrfCoordinatorV2,
-    //     uint256 entranceFee,
-    //     bytes32 gasLane,
-    //     uint64 subscriptionId,
-    //     uint32 callbackGasLimit,
-    //     uint256 interval
-    // ) VRFConsumerBaseV2(vrfCoordinatorV2) {
-    //     i_entranceFee = entranceFee;
-    //     i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2);
-    //     i_gasLane = gasLane;
-    //     i_subscriptionId = subscriptionId;
-    //     i_callbackGasLimit = callbackGasLimit;
-    // }
+    constructor(
+        address vrfCoordinatorV2,
+        uint256 entranceFee,
+        bytes32 gasLane,
+        uint64 subscriptionId,
+        uint32 callbackGasLimit,
+        uint256 interval
+    ) VRFConsumerBaseV2(vrfCoordinatorV2) {
+        // i_entranceFee = entranceFee;
+        i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2);
+        i_gasLane = gasLane;
+        i_subscriptionId = subscriptionId;
+        i_callbackGasLimit = callbackGasLimit;
+    }
+
+    function wishBannerNft() public payable returns (uint256 requestId) {
+        if (msg.value < i_mintFee) {
+            revert WishNft__NeedMoreETHSennt();
+        }
+        requestId = i_vrfCoordinator.requestRandomWords(
+            i_gasLane,
+            i_subscriptionId,
+            REQUEST_CONFIRMATIONS,
+            i_callbackGasLimit,
+            NUM_WORDS
+        );
+        s_requestIdToSender[requestId] = msg.sender;
+        emit NftRequested(requestId, msg.sender);
+    }
 }
 
 //TODO
