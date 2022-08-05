@@ -48,6 +48,9 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     uint256 public s_tokenCounter;
     uint256 internal constant MAX_CHANCE_VALUE = 100;
     uint256 internal immutable i_mintFee;
+    string[] internal s_5starUris;
+    string[] internal s_4starUris;
+    string[] internal s_3starUris;
 
     // Events
     event NftRequested(uint256 indexed requestId, address requester);
@@ -58,7 +61,10 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         bytes32 gasLane,
         uint64 subscriptionId,
         uint32 callbackGasLimit,
-        uint256 interval
+        uint256 interval,
+        string[6] memory s_5starIris,
+        string[7] memory s_4starIris,
+        string[] memory s_3starIris
     ) VRFConsumerBaseV2(vrfCoordinatorV2) {
         // i_entranceFee = entranceFee;
         i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2);
