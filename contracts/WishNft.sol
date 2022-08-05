@@ -10,6 +10,29 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 error WishNft__NeedMoreETHSennt();
 
 contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
+    // Types
+    // 4star rate up 20%[ rosaria, beidou , sayu] and 10%[ lisa, amber, barbara, noelle]
+    //Replace Characters
+    enum FourStars {
+        ROSARIA,
+        BEIDOU,
+        SAYU,
+        LISA,
+        AMBER,
+        BARBARA,
+        NOELLE
+    }
+    // 1 event 5star(%)[kusanali] and 5 regular 5stars[lumine, qiqi, yae, mona, ayayaka]
+    //Replace Characters
+    enum FiveStars {
+        KUSANALI,
+        LUMINE,
+        QIQI,
+        YAE,
+        MONA,
+        AYAYAKA
+    }
+
     // Chainlink VRF Variables
     VRFCoordinatorV2Interface private immutable i_vrfCoordinator;
     uint64 private immutable i_subscriptionId;
@@ -57,6 +80,92 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         );
         s_requestIdToSender[requestId] = msg.sender;
         emit NftRequested(requestId, msg.sender);
+    }
+
+    //if wishCounter = 90 {run function 5star()}
+    //if wishCounter % 10 {run function check 4star(98)5star(2)}
+    //if wishCounter > 75 && % 10 != 10 {uint256 moddedRng = randomWords[0] % MAX_CHANCE_VALUE;
+    // run function check 5star(1%), 4star(5%), 3star(94%) }
+
+    // randomWords[0]- check
+    function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {
+        address myPlayerAddress = s_requestIdToSender[requestId];
+        uint256 newItemId = s_tokenCounter;
+        s_tokenCounter = s_tokenCounter + 1;
+        uint256 moddedRng = randomWords[0] % MAX_CHANCE_VALUE;
+        Character playersCharacter = getCharacterFromModdedRng(moddedRng);
+        _safeMint(myPlayerAddress, newItemId);
+        _setTokenURI(newItemId, s_playersTokenUris[uint256(playersCharacter)]);
+        emit NftMinted(playersCharacter, myPlayerAddress);
+    }
+
+    //1% 5star, 5% 4star, 94% 3star
+    function getRegular4Star() public pure returns (uint256[7] memory) {
+        return [20, 40, 60, 70, 80, 90, MAX_CHANCE_VALUE];
+    }
+
+    function getRegular5Star() public pure returns (uint256[6] memory) {
+        return [50, 60, 70, 80, 90, MAX_CHANCE_VALUE];
+    }
+
+    //wishCounter -75 = increase rate
+    function getSoftPityChance() public pure returns (uint256[3] memory) {
+        return [10, 30, MAX_CHANCE_VALUE];
+    }
+
+    // guaranteed 5 star and reset wishCounter
+    function getHardPityChance() public pure returns (uint256[3] memory) {
+        return [10, 30, MAX_CHANCE_VALUE];
+    }
+
+    //function to check 4(5), 5(1) or 3(94) star(for regular)
+    function getCheckRegular(uint256 moddedRng) public pure returns (uint256) {
+        if (moddedRng > 2) {
+            get5StarRng(moddedRng);
+        } else if (moddedRng > 6) {
+            get4StarRng(moddedRng);
+        } else {
+            return 3;
+        }
+    }
+
+    //function to check 4(98) or 5(2) star(for 10 pulls)
+    function getCheck10(uint256 moddedRng) public pure returns (uint256) {
+        if (moddedRng > 3) {
+            get5StarRng(moddedRng);
+        } else {
+            return 3;
+        }
+    }
+
+    // 1 event 5star(%)[kusanali] and 5 regular 5stars[lumine, qiqi, yae, mona, ayayaka]
+    function get5StarRng(uint256 moddedRng) public pure returns (FourStars) {
+        uint256 cumulativeSum = 0;
+        uint256[3] memory chanceArray = getRegular4Star();
+        for (uint256 i = 0; i < chanceArray.length; i++) {
+            // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
+            if (moddedRng >= cumulativeSum && moddedRng < chanceArray[i]) {
+                return FourStars(i);
+            }
+            // cumulativeSum = cumulativeSum + chanceArray[i];
+            cumulativeSum = chanceArray[i];
+        }
+        revert RangeOutOfBounds();
+    }
+
+    // 4star rate up 20%[ rosaria, beidou , sayu] and 10%[ lisa, amber, barbara, noelle]
+    function get4StarRng(uint256 moddedRng) public pure returns (FiveStars) {
+        uint256 cumulativeSum = 0;
+        uint256[3] memory chanceArray = getRegular5Star();
+        for (uint256 i = 0; i < chanceArray.length; i++) {
+            // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
+            if (moddedRng >= cumulativeSum && moddedRng < chanceArray[i]) {
+                return FiveStars(i);
+            }
+            // cumulativeSum = cumulativeSum + chanceArray[i];
+            cumulativeSum = chanceArray[i];
+        }
+        revert RangeOutOfBounds();
     }
 }
 
