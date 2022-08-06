@@ -43,6 +43,7 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
 
     // VRF Helpers
     mapping(uint256 => address) public s_requestIdToSender;
+    mapping(uint256 => address) public s_playersWishCounter;
 
     // NFT Variables
     uint256 public s_tokenCounter;
@@ -51,6 +52,7 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     string[] internal s_5starUris;
     string[] internal s_4starUris;
     string[] internal s_3starUris;
+    uint256 public wishCounter;
 
     // Events
     event NftRequested(uint256 indexed requestId, address requester);
@@ -62,10 +64,10 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         uint64 subscriptionId,
         uint32 callbackGasLimit,
         uint256 interval,
-        string[6] memory s_5starIris,
-        string[7] memory s_4starIris,
-        string[] memory s_3starIris
-    ) VRFConsumerBaseV2(vrfCoordinatorV2) {
+        string[6] memory fiveStarUris,
+        string[7] memory fourStarUris,
+        string[] memory threeStarUris
+    ) VRFConsumerBaseV2(vrfCoordinatorV2) ERC721("GENSHIN NFT", "GI") {
         // i_entranceFee = entranceFee;
         i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2);
         i_gasLane = gasLane;
