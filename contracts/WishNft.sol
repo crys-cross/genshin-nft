@@ -8,23 +8,21 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 error WishNft__NeedMoreETHSennt();
+error WishNft__RangeOutOfBounds();
 
 contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     // Types
     // 4star rate up 20%[ rosaria, beidou , sayu] and 10%[ lisa, amber, barbara, noelle]
-    //Replace Characters
-    enum FourStars {
+    // 1 event 5star(%)[kusanali] and 5 regular 5stars[lumine, qiqi, yae, mona, ayayaka]
+    enum Characters {
+        CODASHOP,
         ROSARIA,
         BEIDOU,
         SAYU,
         LISA,
         AMBER,
         BARBARA,
-        NOELLE
-    }
-    // 1 event 5star(%)[kusanali] and 5 regular 5stars[lumine, qiqi, yae, mona, ayayaka]
-    //Replace Characters
-    enum FiveStars {
+        NOELLE,
         KUSANALI,
         LUMINE,
         QIQI,
@@ -100,24 +98,33 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         address myPlayerAddress = s_requestIdToSender[requestId];
         uint256 newItemId = s_tokenCounter;
         s_tokenCounter = s_tokenCounter + 1;
-        uint256 moddedRng = randomWords[0] % MAX_CHANCE_VALUE;
-        Character playersCharacter = getCharacterFromModdedRng(moddedRng);
+        uint256 moddedRng1 = randomWords[0] % MAX_CHANCE_VALUE;
+        uint256 moddedRng2 = randomWords[0] % MAX_CHANCE_VALUE;
+        Characters playersCharacter = getCharacterFromModdedRng(moddedRng);
         _safeMint(myPlayerAddress, newItemId);
         _setTokenURI(newItemId, s_playersTokenUris[uint256(playersCharacter)]);
         emit NftMinted(playersCharacter, myPlayerAddress);
     }
 
+    function getRegularChanceArray() public pure returns (uint256[3] memory) {
+        return [1, 5, MAX_CHANCE_VALUE];
+    }
+
+    function getSoftPityChanceArray() public pure returns (uint256[3] memory) {
+        return [2, MAX_CHANCE_VALUE];
+    }
+
     //1% 5star, 5% 4star, 94% 3star
-    function getRegular4Star() public pure returns (uint256[7] memory) {
+    function get4StarChanceArray() public pure returns (uint256[7] memory) {
         return [20, 40, 60, 70, 80, 90, MAX_CHANCE_VALUE];
     }
 
-    function getRegular5Star() public pure returns (uint256[6] memory) {
+    function get5StarChanceArray() public pure returns (uint256[6] memory) {
         return [50, 60, 70, 80, 90, MAX_CHANCE_VALUE];
     }
 
     //wishCounter -75 = increase rate
-    function getSoftPityChance() public pure returns (uint256[3] memory) {
+    function getSoftPityChanceArray() public pure returns (uint256[3] memory) {
         return [10, 30, MAX_CHANCE_VALUE];
     }
 
@@ -125,6 +132,51 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     function getHardPityChance() public pure returns (uint256[3] memory) {
         return [10, 30, MAX_CHANCE_VALUE];
     }
+
+    function getRegularCharacter(uint256 moddedRng1, uint256 moddedRng2)
+        public
+        pure
+        returns (Characters)
+    {
+        uint256 index = 0;
+        uint256[7] memory chanceArrayFourStars = get4StarChanceArray();
+        uint256[6] memory chanceArrayFiveStars = get5StarChanceArray();
+        if (moddedRng1 % 100 < 95) {
+            index = 0;
+        }
+        if (moddedRng1 % 100 < 99) {
+            for (uint256 i = 0; i < chanceArrayFourStars.length; i++) {
+                // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
+                if (moddedRng2 >= chanceArrayFourStars[i]) {}
+                // cumulativeSum = cumulativeSum + chanceArray[i];
+                return Characters(index);
+            }
+        }
+
+        revert WishNft__RangeOutOfBounds();
+    }
+
+    // function getBreedFromModdedRng(uint256 moddedRng) public pure returns (Breed) {
+    //     uint256 cumulativeSum = 0;
+    //     uint256[3] memory chanceArray = getChanceArray();
+    //     for (uint256 i = 0; i < chanceArray.length; i++) {
+    //         // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
+    //         if (moddedRng >= cumulativeSum && moddedRng < chanceArray[i]) {
+    //             return Breed(i);
+    //         }
+    //         // cumulativeSum = cumulativeSum + chanceArray[i];
+    //         cumulativeSum = chanceArray[i];
+    //     }
+    //     revert RangeOutOfBounds();
+    // }
+
+    // function _initializeContract(string[3] memory dogTokenUris) private {
+    //     if (s_initialized) {
+    //         revert AlreadyInitialized();
+    //     }
+    //     s_dogTokenUris = dogTokenUris;
+    //     s_initialized = true;
+    // }
 
     //function to check 4(5), 5(1) or 3(94) star(for regular)
     function getCheckRegular(uint256 moddedRng) public pure returns (uint256) {
@@ -147,34 +199,34 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     }
 
     // 1 event 5star(%)[kusanali] and 5 regular 5stars[lumine, qiqi, yae, mona, ayayaka]
-    function get5StarRng(uint256 moddedRng) public pure returns (FourStars) {
-        uint256 cumulativeSum = 0;
-        uint256[3] memory chanceArray = getRegular4Star();
-        for (uint256 i = 0; i < chanceArray.length; i++) {
-            // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
-            if (moddedRng >= cumulativeSum && moddedRng < chanceArray[i]) {
-                return FourStars(i);
-            }
-            // cumulativeSum = cumulativeSum + chanceArray[i];
-            cumulativeSum = chanceArray[i];
-        }
-        revert RangeOutOfBounds();
-    }
+    // function get5StarRng(uint256 moddedRng) public pure returns (FourStars) {
+    //     uint256 cumulativeSum = 0;
+    //     uint256[3] memory chanceArray = getRegular4Star();
+    //     for (uint256 i = 0; i < chanceArray.length; i++) {
+    //         // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
+    //         if (moddedRng >= cumulativeSum && moddedRng < chanceArray[i]) {
+    //             return FourStars(i);
+    //         }
+    //         // cumulativeSum = cumulativeSum + chanceArray[i];
+    //         cumulativeSum = chanceArray[i];
+    //     }
+    //     revert RangeOutOfBounds();
+    // }
 
     // 4star rate up 20%[ rosaria, beidou , sayu] and 10%[ lisa, amber, barbara, noelle]
-    function get4StarRng(uint256 moddedRng) public pure returns (FiveStars) {
-        uint256 cumulativeSum = 0;
-        uint256[3] memory chanceArray = getRegular5Star();
-        for (uint256 i = 0; i < chanceArray.length; i++) {
-            // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
-            if (moddedRng >= cumulativeSum && moddedRng < chanceArray[i]) {
-                return FiveStars(i);
-            }
-            // cumulativeSum = cumulativeSum + chanceArray[i];
-            cumulativeSum = chanceArray[i];
-        }
-        revert RangeOutOfBounds();
-    }
+    //     function get4StarRng(uint256 moddedRng) public pure returns (FiveStars) {
+    //         uint256 cumulativeSum = 0;
+    //         uint256[3] memory chanceArray = getRegular5Star();
+    //         for (uint256 i = 0; i < chanceArray.length; i++) {
+    //             // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
+    //             if (moddedRng >= cumulativeSum && moddedRng < chanceArray[i]) {
+    //                 return FiveStars(i);
+    //             }
+    //             // cumulativeSum = cumulativeSum + chanceArray[i];
+    //             cumulativeSum = chanceArray[i];
+    //         }
+    //         revert RangeOutOfBounds();
+    //     }
 }
 
 //TODO
