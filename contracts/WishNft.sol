@@ -100,7 +100,17 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         s_tokenCounter = s_tokenCounter + 1;
         uint256 moddedRng1 = randomWords[0] % MAX_CHANCE_VALUE;
         uint256 moddedRng2 = randomWords[0] % MAX_CHANCE_VALUE;
-        Characters playersCharacter = getCharacterFromModdedRng(moddedRng);
+        Characters playersCharacter;
+        if (wishCounter = 90) {
+            playersCharacter = getCharacterFromModdedRng(moddedRng1, moddedRng1);
+        } else if (wishCounter % 10) {
+            playersCharacter = getCharacterFromModdedRng(moddedRng1, moddedRng1);
+        } else if (wishCounter < 75) {
+            playersCharacter = getRegularCharacter(moddedRng1, moddedRng1);
+        } else {
+            playersCharacter = getRegularCharacter(moddedRng1, moddedRng1);
+        }
+
         _safeMint(myPlayerAddress, newItemId);
         _setTokenURI(newItemId, s_playersTokenUris[uint256(playersCharacter)]);
         emit NftMinted(playersCharacter, myPlayerAddress);
@@ -133,26 +143,117 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         return [10, 30, MAX_CHANCE_VALUE];
     }
 
+    function getHardPityCharacter(uint256 moddedRng2) public pure returns (Characters) {
+        uint256 indexNumber;
+        uint256[6] memory chanceArrayFiveStars = get5StarChanceArray();
+        for (uint256 i = 0; i < chanceArrayFiveStars.length; i++) {
+            // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
+            if (moddedRng2 <= chanceArrayFiveStars[i]) {
+                indexNumber = i + 9;
+            }
+            wishCounter = 0;
+            return Characters(indexNumber);
+        }
+
+        revert WishNft__RangeOutOfBounds();
+    }
+
+    function get10thRateCharacter(uint256 moddedRng1, uint256 moddedRng2)
+        public
+        pure
+        returns (Characters)
+    {
+        uint256 indexNumber;
+        uint256[7] memory chanceArrayFourStars = get4StarChanceArray();
+        uint256[6] memory chanceArrayFiveStars = get5StarChanceArray();
+        if (moddedRng1 % 100 < 99) {
+            for (uint256 i = 0; i < chanceArrayFourStars.length; i++) {
+                // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
+                if (moddedRng2 <= chanceArrayFourStars[i]) {
+                    indexNumber = i + 1;
+                }
+                wishCounter += 1;
+                return Characters(indexNumber);
+            }
+        } else {
+            for (uint256 i = 0; i < chanceArrayFiveStars.length; i++) {
+                // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
+                if (moddedRng2 <= chanceArrayFourStars[i]) {
+                    indexNumber = i + 9;
+                }
+                wishCounter = 0;
+                return Characters(indexNumber);
+            }
+        }
+        revert WishNft__RangeOutOfBounds();
+    }
+
     function getRegularCharacter(uint256 moddedRng1, uint256 moddedRng2)
         public
         pure
         returns (Characters)
     {
-        uint256 index = 0;
+        uint256 indexNumber;
         uint256[7] memory chanceArrayFourStars = get4StarChanceArray();
         uint256[6] memory chanceArrayFiveStars = get5StarChanceArray();
         if (moddedRng1 % 100 < 95) {
-            index = 0;
-        }
-        if (moddedRng1 % 100 < 99) {
+            indexNumber = 0;
+            wishCounter += 1;
+            return Characters(indexNumber);
+        } else if (moddedRng1 % 100 < 100) {
             for (uint256 i = 0; i < chanceArrayFourStars.length; i++) {
                 // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
-                if (moddedRng2 >= chanceArrayFourStars[i]) {}
-                // cumulativeSum = cumulativeSum + chanceArray[i];
-                return Characters(index);
+                if (moddedRng2 <= chanceArrayFourStars[i]) {
+                    indexNumber = i + 1;
+                }
+                wishCounter += 1;
+                return Characters(indexNumber);
+            }
+        } else if (moddedRng1 % 100 = 100) {
+            for (uint256 i = 0; i < chanceArrayFiveStars.length; i++) {
+                // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
+                if (moddedRng2 <= chanceArrayFourStars[i]) {
+                    indexNumber = i + 9;
+                }
+                wishCounter = 0;
+                return Characters(indexNumber);
             }
         }
+        revert WishNft__RangeOutOfBounds();
+    }
 
+    function getSoftPityCharacter(uint256 moddedRng1, uint256 moddedRng2)
+        public
+        pure
+        returns (Characters)
+    {
+        uint256 indexNumber;
+        uint256[7] memory chanceArrayFourStars = get4StarChanceArray();
+        uint256[6] memory chanceArrayFiveStars = get5StarChanceArray();
+        uint256 rateValue = wishCounter - 74;
+        if (moddedRng1 % 100 < 95) {
+            indexNumber = 0;
+            wishCounter += 1;
+            return Characters(indexNumber);
+        } else if (moddedRng1 % 100 < 100) {
+            for (uint256 i = 0; i < chanceArrayFourStars.length; i++) {
+                // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
+                if (moddedRng2 <= chanceArrayFourStars[i]) {
+                    indexNumber = i + 1;
+                }
+                wishCounter += 1;
+                return Characters(indexNumber);
+            }
+        } else if (moddedRng1 % 100 = 100) {
+            for (uint256 i = 0; i < chanceArrayFiveStars.length; i++) {
+                // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
+                if (moddedRng2 <= chanceArrayFourStars[i]) {
+                    indexNumber = i + 9;
+                }
+                wishCounter = 0;
+                return Characters(indexNumber);
+            }
+        }
         revert WishNft__RangeOutOfBounds();
     }
 
