@@ -8,7 +8,7 @@ const pinataApiSecret = process.env.PINATA_API_SECRET || ""
 const pinata = pinataSDK(pinataApiKey, pinataApiSecret)
 
 // ./images/randomNft/
-export const storeImages = async (imagesFilePath) => {
+export const storeImages = async (imagesFilePath: string) => {
     const fullImagesPath = path.resolve(imagesFilePath)
     const files = fs.readdirSync(fullImagesPath)
     let responses = []
@@ -26,7 +26,7 @@ export const storeImages = async (imagesFilePath) => {
     return { responses, files }
 }
 
-export const storeTokenUriMetadata = async (metadata) => {
+export const storeTokenUriMetadata = async (metadata: Object) => {
     try {
         const response = await pinata.pinJSONToIPFS(metadata)
         return response
