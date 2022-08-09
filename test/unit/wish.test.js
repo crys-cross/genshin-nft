@@ -7,4 +7,42 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
     : describe("Raffle Unit Test", () => {
           let raffle, VRFCoordinatorV2Mock, raffleEntranceFee, deployer, interval
           const chainId = network.config.chainId
+          beforeEach(async () => {
+              //a
+          })
+          describe("constructor", async () => {
+              it("description", async () => {
+                  //a
+              })
+          })
+          describe("fulfillRandomWords", async () => {
+              it("description", async () => {
+                  //a
+              })
+          })
+          describe("getHardPityCharacter", async () => {
+              it("description", async () => {
+                  //a
+              })
+          })
+          describe("get10thRateCharacter", async () => {
+              it("description", async () => {
+                  //a
+              })
+          })
+          describe("getRegularCharacter", async () => {
+              it("description", async () => {
+                  //a
+              })
+          })
+          describe("getSoftPityCharacter", async () => {
+              it("description", async () => {
+                  //a
+              })
+          })
+          describe("_initializeContract", async () => {
+              it("description", async () => {
+                  //a
+              })
+          })
       })
