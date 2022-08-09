@@ -60,15 +60,15 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     constructor(
         address vrfCoordinatorV2,
         uint256 mintFee,
-        bytes32 gasLane,
         uint64 subscriptionId,
+        bytes32 gasLane,
         uint32 callbackGasLimit,
         string[13] memory characterUris
     ) VRFConsumerBaseV2(vrfCoordinatorV2) ERC721("GENSHIN NFT", "GI") {
         i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2);
         i_mintFee = mintFee;
-        i_gasLane = gasLane;
         i_subscriptionId = subscriptionId;
+        i_gasLane = gasLane;
         i_callbackGasLimit = callbackGasLimit;
         _initializeContract(characterUris);
     }

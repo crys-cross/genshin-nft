@@ -62,11 +62,11 @@ const deployWishNft: DeployFunction = async (hre: HardhatRuntimeEnvironment) => 
     // await storeImages(imagesLocation)
     const args = [
         vrfCoordinatorV2Address,
+        networkConfig[chainId]["mintFee"],
         subscriptionId,
         networkConfig[chainId]["gasLane"],
         networkConfig[chainId]["callbackGasLimit"],
         tokenUris,
-        networkConfig[chainId]["mintFee"],
     ]
 
     const randomIpfsNft = await deploy("RandomIpfsNft", {
