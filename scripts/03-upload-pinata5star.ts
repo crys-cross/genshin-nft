@@ -3,7 +3,6 @@ import { storeImages, storeTokenUriMetadata } from "../utils/uploadToPinata"
 const imagesLocation = "./images/star5"
 const metadataTemplate = {
     name: "",
-    description: "",
     image: "",
     attributes: [
         {
@@ -16,7 +15,7 @@ const metadataTemplate = {
     ],
 }
 
-let tokenUris = []
+let tokenUris: any[] = []
 
 const pinataUpload5Stars = async () => {
     //get the IPFS hashes ofour images(Methods below)
@@ -34,7 +33,7 @@ const handleTokenUris = async () => {
     // Check out https://github.com/PatrickAlphaC/nft-mix for a pythonic version of uploading
     // to the raw IPFS-daemon from https://docs.ipfs.io/how-to/command-line-quick-start/
     // You could also look at pinata https://www.pinata.cloud/
-    tokenUris = []
+    // tokenUris = []
     //store the image in IPFS
     //store the metadata in IPFS
     const { responses: imageUploadResponses, files } = await storeImages(imagesLocation)
@@ -43,7 +42,7 @@ const handleTokenUris = async () => {
         //upload the metadata
         let tokenUriMetadata = { ...metadataTemplate } //... unpack
         tokenUriMetadata.name = files[imageUploadResponseIndex].replace(".png", "")
-        tokenUriMetadata.description = `An adorable ${tokenUriMetadata.name} pup!`
+        // tokenUriMetadata.description = `An adorable ${tokenUriMetadata.name} pup!`
         tokenUriMetadata.image = `ipfs://${imageUploadResponses[imageUploadResponseIndex].IpfsHash}`
         console.log(`Uploading ${tokenUriMetadata.name}...`)
         // store the JSON to pinata/IPFS

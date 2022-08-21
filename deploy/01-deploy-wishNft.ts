@@ -9,15 +9,44 @@ import { DeployFunction } from "hardhat-deploy/dist/types"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 
 const FUND_AMOUNT = "1000000000000000000000" //10 LINK ethers.parseUnit
-const imagesLocation = "./images/randomNft"
+const imagesLocation = "./images/star5"
+// 3star metadata
+// const metadataTemplate = {
+//     name: "",
+//     image: "",
+//     attributes: [
+//         {
+//             max_hp: 890,
+//             atk: 90,
+//             def: 90,
+//             elemental_mastery: 0,
+//             max_stamina: 224,
+//         },
+//     ],
+// }
+// 4 star metadata
+// const metadataTemplate = {
+//     name: "",
+//     description: "",
+//     image: "",
+//     attributes: [
+//         {
+//             max_hp: 900,
+//             atk: 100,
+//             def: 90,
+//             elemental_mastery: 0,
+//             max_stamina: 224,
+//         },
+//     ],
+// }
+// 5 star metadata
 const metadataTemplate = {
     name: "",
-    description: "",
     image: "",
     attributes: [
         {
-            max_hp: 900,
-            atk: 100,
+            max_hp: 910,
+            atk: 110,
             def: 90,
             elemental_mastery: 0,
             max_stamina: 224,
@@ -25,7 +54,7 @@ const metadataTemplate = {
     ],
 }
 
-let tokenUris = []
+let tokenUris: any[] = []
 
 const deployWishNft: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     const { getNamedAccounts, deployments, network, ethers } = hre
@@ -60,26 +89,26 @@ const deployWishNft: DeployFunction = async (hre: HardhatRuntimeEnvironment) => 
 
     log("----------------------------")
     // await storeImages(imagesLocation)
-    const args = [
-        vrfCoordinatorV2Address,
-        networkConfig[chainId]["mintFee"],
-        subscriptionId,
-        networkConfig[chainId]["gasLane"],
-        networkConfig[chainId]["callbackGasLimit"],
-        tokenUris,
-    ]
+    // const args = [
+    //     vrfCoordinatorV2Address,
+    //     networkConfig[chainId]["mintFee"],
+    //     subscriptionId,
+    //     networkConfig[chainId]["gasLane"],
+    //     networkConfig[chainId]["callbackGasLimit"],
+    //     tokenUris,
+    // ]
 
-    const randomIpfsNft = await deploy("RandomIpfsNft", {
-        from: deployer,
-        args: args,
-        log: true,
-        waitConfirmations: waitBlockConfirmations || 1,
-    })
-    log("--------------------------------")
-    if (chainId != 31337 && process.env.ETHERSCAN_API_KEY) {
-        log("Verifying...")
-        await verify(randomIpfsNft.address, args)
-    }
+    // const randomIpfsNft = await deploy("RandomIpfsNft", {
+    //     from: deployer,
+    //     args: args,
+    //     log: true,
+    //     waitConfirmations: waitBlockConfirmations || 1,
+    // })
+    // log("--------------------------------")
+    // if (chainId != 31337 && process.env.ETHERSCAN_API_KEY) {
+    //     log("Verifying...")
+    //     await verify(randomIpfsNft.address, args)
+    // }
 }
 
 const handleTokenUris = async () => {
@@ -95,7 +124,7 @@ const handleTokenUris = async () => {
         //upload the metadata
         let tokenUriMetadata = { ...metadataTemplate } //... unpack
         tokenUriMetadata.name = files[imageUploadResponseIndex].replace(".png", "")
-        tokenUriMetadata.description = `An adorable ${tokenUriMetadata.name} pup!`
+        // tokenUriMetadata.description = `An adorable ${tokenUriMetadata.name} pup!`
         tokenUriMetadata.image = `ipfs://${imageUploadResponses[imageUploadResponseIndex].IpfsHash}`
         console.log(`Uploading ${tokenUriMetadata.name}...`)
         // store the JSON to pinata/IPFS
@@ -108,3 +137,34 @@ const handleTokenUris = async () => {
 }
 export default deployWishNft
 deployWishNft.tags = ["all", "randomipfs", "main"]
+
+// Lumine
+// 'ipfs://QmSL1Yuc7KDUEH19WSDNHZ9F9rRBe4ytMcUjEvx26HrUDr'
+
+// Barbara...
+// 'ipfs://QmZrvCoSSUQcgNH1YkfnXRBkEuJV85DnoRuFEcy9Xqs735',
+// Beidou
+// 'ipfs://QmPx84b3RaN1mNvS8GvtsTy49q88gJRKrdpmrXAVvVybRt',
+//  Lisa
+// 'ipfs://QmaPgGv7U5RtN8Zo8ZN666KAbTiVhT35A5WHeBSmK3n4Tf',
+//  Ningguang
+// 'ipfs://Qmd9EAuRzpENHnfN6JGatNVRPDpb2sSba2pgHDveLnRN8z',
+//  Noelle
+// 'ipfs://QmbE1zNDYop49mCQNJmSwALDeEEyWYrgX2QaFUhBdSU3eh',
+//  Rosaria
+// 'ipfs://Qma6xfVbp1PTAn3xdAnE2aKe4fUMLsm9SA5LEwSAQkQUz6',
+//  Sayu
+// 'ipfs://QmeKAmcMhZfPRWp9n2b85BDXHMP2KwxuJ5GjYkWgRsKUnL'
+
+// Ayaka
+// 'ipfs://QmTokSvr7SPnvsdDCXT9nSWAb2jmXr8ySiXAhzPq9x4pSw',
+//  Hutao
+// 'ipfs://QmRH2f4et7sJWyjDni5Wm3Anb47tg22E1dGWZNxv2ADggk',
+//  Kokomi
+// 'ipfs://QmYaQnbnW7WfA6tNTKYoke5i74MedfL67onH39SLFsDDTf',
+//  Kusanali
+// 'ipfs://QmUVLbL9y3HSeb2BQijzUWbUmDbFKPNcZQKxZVnG6xoP5J',
+//  Qiqi
+// 'ipfs://QmQpDzekoy5vndA3ZkedCjCawMHHq26YV5QDuFbQD8NArU',
+//  Zhongli
+// 'ipfs://QmYCLATGQX2BrThdMdRXT4qW6dW4BKGVvpBRVaaixGLnrW'
