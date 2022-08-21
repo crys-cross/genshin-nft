@@ -13,23 +13,23 @@ error WishNft__AlreadyInitialized();
 
 contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     // Types
-    // 4star rate up 20%[ rosaria, beidou , sayu] and 10%[ lisa, amber, barbara, noelle]
-    // 1 event 5star(%)[kusanali] and 5 regular 5stars[lumine, qiqi, yae, mona, ayayaka]
+    // 4star rate up 20%[ rosaria, beidou , sayu] and 10%[ lisa, ningguang, barbara, noelle]
+    // 1 event 5star(%)[kusanali] and 5 regular 5stars[KOKOMI, qiqi, yae, hutao, ayayaka]
     // Characters[0]-3stars, Characters[1-7]-4stars, Characters[8-13]-5stars
     enum Characters {
-        CODASHOP,
+        LUMINE,
         ROSARIA,
         BEIDOU,
         SAYU,
         LISA,
-        AMBER,
+        NINGGUANG,
         BARBARA,
         NOELLE,
         KUSANALI,
-        LUMINE,
+        KOKOMI,
         QIQI,
-        YAE,
-        MONA,
+        ZHONGLI,
+        HUTAO,
         AYAYAKA
     }
 
@@ -43,7 +43,7 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
 
     // VRF Helpers
     mapping(uint256 => address) public s_requestIdToSender;
-    mapping(uint256 => address) public s_playersWishCounter;
+    // mapping(address => uint256) public s_playersWishCounter;
 
     // NFT Variables
     uint256 private immutable i_mintFee;
@@ -249,7 +249,7 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         return i_mintFee;
     }
 
-    function getDogTokenUris(uint256 index) public view returns (string memory) {
+    function getCharacterUris(uint256 index) public view returns (string memory) {
         return s_characterUris[index];
     }
 
@@ -259,6 +259,10 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
 
     function getTokenCounter() public view returns (uint256) {
         return s_tokenCounter;
+    }
+
+    function getWishCounter() public view returns (uint256) {
+        return wishCounter;
     }
 }
 
