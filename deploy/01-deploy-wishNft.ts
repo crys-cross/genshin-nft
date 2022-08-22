@@ -54,7 +54,22 @@ const metadataTemplate = {
     ],
 }
 
-let tokenUris: any[] = []
+let tokenUris: any[] = [
+    "ipfs://QmSL1Yuc7KDUEH19WSDNHZ9F9rRBe4ytMcUjEvx26HrUDr",
+    "ipfs://Qma6xfVbp1PTAn3xdAnE2aKe4fUMLsm9SA5LEwSAQkQUz6",
+    "ipfs://QmPx84b3RaN1mNvS8GvtsTy49q88gJRKrdpmrXAVvVybRt",
+    "ipfs://QmeKAmcMhZfPRWp9n2b85BDXHMP2KwxuJ5GjYkWgRsKUnL",
+    "ipfs://QmaPgGv7U5RtN8Zo8ZN666KAbTiVhT35A5WHeBSmK3n4Tf",
+    "ipfs://Qmd9EAuRzpENHnfN6JGatNVRPDpb2sSba2pgHDveLnRN8z",
+    "ipfs://QmZrvCoSSUQcgNH1YkfnXRBkEuJV85DnoRuFEcy9Xqs735",
+    "ipfs://QmbE1zNDYop49mCQNJmSwALDeEEyWYrgX2QaFUhBdSU3eh",
+    "ipfs://QmUVLbL9y3HSeb2BQijzUWbUmDbFKPNcZQKxZVnG6xoP5J",
+    "ipfs://QmYaQnbnW7WfA6tNTKYoke5i74MedfL67onH39SLFsDDTf",
+    "ipfs://QmQpDzekoy5vndA3ZkedCjCawMHHq26YV5QDuFbQD8NArU",
+    "ipfs://QmYCLATGQX2BrThdMdRXT4qW6dW4BKGVvpBRVaaixGLnrW",
+    "ipfs://QmRH2f4et7sJWyjDni5Wm3Anb47tg22E1dGWZNxv2ADggk",
+    "ipfs://QmTokSvr7SPnvsdDCXT9nSWAb2jmXr8ySiXAhzPq9x4pSw",
+]
 
 const deployWishNft: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     const { getNamedAccounts, deployments, network, ethers } = hre
@@ -141,30 +156,30 @@ deployWishNft.tags = ["all", "randomipfs", "main"]
 // Lumine
 // 'ipfs://QmSL1Yuc7KDUEH19WSDNHZ9F9rRBe4ytMcUjEvx26HrUDr'
 
-// Barbara...
-// 'ipfs://QmZrvCoSSUQcgNH1YkfnXRBkEuJV85DnoRuFEcy9Xqs735',
+//  Rosaria
+// 'ipfs://Qma6xfVbp1PTAn3xdAnE2aKe4fUMLsm9SA5LEwSAQkQUz6',
 // Beidou
 // 'ipfs://QmPx84b3RaN1mNvS8GvtsTy49q88gJRKrdpmrXAVvVybRt',
+//  Sayu
+// 'ipfs://QmeKAmcMhZfPRWp9n2b85BDXHMP2KwxuJ5GjYkWgRsKUnL'
 //  Lisa
 // 'ipfs://QmaPgGv7U5RtN8Zo8ZN666KAbTiVhT35A5WHeBSmK3n4Tf',
 //  Ningguang
 // 'ipfs://Qmd9EAuRzpENHnfN6JGatNVRPDpb2sSba2pgHDveLnRN8z',
+// Barbara...
+// 'ipfs://QmZrvCoSSUQcgNH1YkfnXRBkEuJV85DnoRuFEcy9Xqs735',
 //  Noelle
 // 'ipfs://QmbE1zNDYop49mCQNJmSwALDeEEyWYrgX2QaFUhBdSU3eh',
-//  Rosaria
-// 'ipfs://Qma6xfVbp1PTAn3xdAnE2aKe4fUMLsm9SA5LEwSAQkQUz6',
-//  Sayu
-// 'ipfs://QmeKAmcMhZfPRWp9n2b85BDXHMP2KwxuJ5GjYkWgRsKUnL'
 
-// Ayaka
-// 'ipfs://QmTokSvr7SPnvsdDCXT9nSWAb2jmXr8ySiXAhzPq9x4pSw',
-//  Hutao
-// 'ipfs://QmRH2f4et7sJWyjDni5Wm3Anb47tg22E1dGWZNxv2ADggk',
-//  Kokomi
-// 'ipfs://QmYaQnbnW7WfA6tNTKYoke5i74MedfL67onH39SLFsDDTf',
 //  Kusanali
 // 'ipfs://QmUVLbL9y3HSeb2BQijzUWbUmDbFKPNcZQKxZVnG6xoP5J',
+//  Kokomi
+// 'ipfs://QmYaQnbnW7WfA6tNTKYoke5i74MedfL67onH39SLFsDDTf',
 //  Qiqi
 // 'ipfs://QmQpDzekoy5vndA3ZkedCjCawMHHq26YV5QDuFbQD8NArU',
 //  Zhongli
 // 'ipfs://QmYCLATGQX2BrThdMdRXT4qW6dW4BKGVvpBRVaaixGLnrW'
+//  Hutao
+// 'ipfs://QmRH2f4et7sJWyjDni5Wm3Anb47tg22E1dGWZNxv2ADggk',
+// Ayaka
+// 'ipfs://QmTokSvr7SPnvsdDCXT9nSWAb2jmXr8ySiXAhzPq9x4pSw',

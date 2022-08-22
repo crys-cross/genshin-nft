@@ -30,7 +30,7 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         QIQI,
         ZHONGLI,
         HUTAO,
-        AYAYAKA
+        AYAKA
     }
 
     // Chainlink VRF Variables
@@ -136,7 +136,7 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         for (uint256 i = 0; i < chanceArrayFiveStars.length; i++) {
             // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
             if (moddedRng2 <= chanceArrayFiveStars[i]) {
-                indexNumber = i + 9;
+                indexNumber = i + 8;
                 return Characters(indexNumber);
             }
         }
@@ -163,8 +163,8 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         } else {
             for (uint256 i = 0; i < chanceArrayFiveStars.length; i++) {
                 // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
-                if (moddedRng2 <= chanceArrayFourStars[i]) {
-                    indexNumber = i + 9;
+                if (moddedRng2 <= chanceArrayFiveStars[i]) {
+                    indexNumber = i + 8;
                     return Characters(indexNumber);
                 }
             }
