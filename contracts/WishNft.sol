@@ -11,7 +11,7 @@ error WishNft__NeedMoreETHSennt();
 error WishNft__RangeOutOfBounds();
 error WishNft__AlreadyInitialized();
 
-contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
+contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     // Types
     // 4star rate up 20%[ rosaria, beidou , sayu] and 10%[ lisa, ningguang, barbara, noelle]
     // 1 event 5star(%)[kusanali] and 5 regular 5stars[KOKOMI, qiqi, yae, hutao, ayayaka]
@@ -63,7 +63,7 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         uint64 subscriptionId,
         bytes32 gasLane,
         uint32 callbackGasLimit,
-        string[13] memory characterUris
+        string[14] memory characterUris
     ) VRFConsumerBaseV2(vrfCoordinatorV2) ERC721("GENSHIN NFT", "GI") {
         i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2);
         i_mintFee = mintFee;
@@ -237,7 +237,7 @@ contract Wish is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         revert WishNft__RangeOutOfBounds();
     }
 
-    function _initializeContract(string[13] memory characterUris) private {
+    function _initializeContract(string[14] memory characterUris) private {
         if (s_initialized) {
             revert WishNft__AlreadyInitialized();
         }
