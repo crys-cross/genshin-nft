@@ -10,6 +10,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 error WishNft__NeedMoreETHSennt();
 error WishNft__RangeOutOfBounds();
 error WishNft__AlreadyInitialized();
+error WishNft__TransferFailed();
+error WishNft__MintSwitchedOffbyOwner();
 
 contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     // Types
@@ -52,6 +54,7 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     string[] internal s_characterUris;
     bool private s_initialized;
     uint256 public wishCounter;
+    bool public mintEnabled;
 
     // Events
     event NftRequested(uint256 indexed requestId, address requester);
@@ -74,6 +77,9 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     }
 
     function wishBannerNft() public payable returns (uint256 requestId) {
+        if (mintEnabled == false) {
+            revert WishNft__MintSwitchedOffbyOwner();
+        }
         if (msg.value < i_mintFee) {
             revert WishNft__NeedMoreETHSennt();
         }
@@ -235,6 +241,18 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
             }
         }
         revert WishNft__RangeOutOfBounds();
+    }
+
+    function mintSwitch(bool _mintEnabled) external onlyOwner {
+        mintEnabled = _mintEnabled; //it allows us to change true or false
+    }
+
+    function withdraw() public onlyOwner {
+        uint256 amount = address(this).balance;
+        (bool success, ) = payable(msg.sender).call{value: amount}("");
+        if (!success) {
+            revert WishNft__TransferFailed();
+        }
     }
 
     function _initializeContract(string[14] memory characterUris) private {
