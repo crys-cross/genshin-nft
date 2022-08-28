@@ -56,14 +56,14 @@ const metadataTemplate = {
 
 let tokenUris: any[] = [
     "ipfs://QmSL1Yuc7KDUEH19WSDNHZ9F9rRBe4ytMcUjEvx26HrUDr",
-    "ipfs://Qma6xfVbp1PTAn3xdAnE2aKe4fUMLsm9SA5LEwSAQkQUz6",
+    "ipfs://QmYH4cbQGG6EyPAyCEkbjDxVRc8cBUTYYAUYGHF8yRBH9F",
     "ipfs://QmPx84b3RaN1mNvS8GvtsTy49q88gJRKrdpmrXAVvVybRt",
     "ipfs://QmeKAmcMhZfPRWp9n2b85BDXHMP2KwxuJ5GjYkWgRsKUnL",
     "ipfs://QmaPgGv7U5RtN8Zo8ZN666KAbTiVhT35A5WHeBSmK3n4Tf",
     "ipfs://Qmd9EAuRzpENHnfN6JGatNVRPDpb2sSba2pgHDveLnRN8z",
     "ipfs://QmZrvCoSSUQcgNH1YkfnXRBkEuJV85DnoRuFEcy9Xqs735",
     "ipfs://QmbE1zNDYop49mCQNJmSwALDeEEyWYrgX2QaFUhBdSU3eh",
-    "ipfs://QmUVLbL9y3HSeb2BQijzUWbUmDbFKPNcZQKxZVnG6xoP5J",
+    "ipfs://Qmbt3boXCRdczkeKsYy9u11hThnkMtm66vDbpZkWLoSEy4",
     "ipfs://QmYaQnbnW7WfA6tNTKYoke5i74MedfL67onH39SLFsDDTf",
     "ipfs://QmQpDzekoy5vndA3ZkedCjCawMHHq26YV5QDuFbQD8NArU",
     "ipfs://QmYCLATGQX2BrThdMdRXT4qW6dW4BKGVvpBRVaaixGLnrW",
@@ -104,26 +104,26 @@ const deployWishNft: DeployFunction = async (hre: HardhatRuntimeEnvironment) => 
 
     log("----------------------------")
     // await storeImages(imagesLocation)
-    const args = [
-        vrfCoordinatorV2Address,
-        networkConfig[chainId]["mintFee"],
-        subscriptionId,
-        networkConfig[chainId]["gasLane"],
-        networkConfig[chainId]["callbackGasLimit"],
-        tokenUris,
-    ]
+    // const args = [
+    //     vrfCoordinatorV2Address,
+    //     networkConfig[chainId]["mintFee"],
+    //     subscriptionId,
+    //     networkConfig[chainId]["gasLane"],
+    //     networkConfig[chainId]["callbackGasLimit"],
+    //     tokenUris,
+    // ]
 
-    const wishNft = await deploy("WishNft", {
-        from: deployer,
-        args: args,
-        log: true,
-        waitConfirmations: waitBlockConfirmations || 1,
-    })
-    log("--------------------------------")
-    if (chainId != 31337 && process.env.ETHERSCAN_API_KEY) {
-        log("Verifying...")
-        await verify(wishNft.address, args)
-    }
+    // const wishNft = await deploy("WishNft", {
+    //     from: deployer,
+    //     args: args,
+    //     log: true,
+    //     waitConfirmations: waitBlockConfirmations || 1,
+    // })
+    // log("--------------------------------")
+    // if (chainId != 31337 && process.env.ETHERSCAN_API_KEY) {
+    //     log("Verifying...")
+    //     await verify(wishNft.address, args)
+    // }
 }
 
 const handleTokenUris = async () => {

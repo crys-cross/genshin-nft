@@ -15,19 +15,19 @@ error WishNft__MintSwitchedOffbyOwner();
 
 contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     // Types
-    // 4star rate up 20%[ rosaria, beidou , sayu] and 10%[ lisa, ningguang, barbara, noelle]
-    // 1 event 5star(%)[kusanali] and 5 regular 5stars[KOKOMI, qiqi, yae, hutao, ayayaka]
+    // 4star rate up 20%[ collei, beidou , sayu] and 10%[ lisa, ningguang, barbara, noelle]
+    // 1 event 5star(%)[nahida] and 5 regular 5stars[KOKOMI, qiqi, yae, hutao, ayayaka]
     // Characters[0]-3stars, Characters[1-7]-4stars, Characters[8-13]-5stars
     enum Characters {
         LUMINE,
-        ROSARIA,
+        COLLEI,
         BEIDOU,
         SAYU,
         LISA,
         NINGGUANG,
         BARBARA,
         NOELLE,
-        KUSANALI,
+        NAHIDA,
         KOKOMI,
         QIQI,
         ZHONGLI,
