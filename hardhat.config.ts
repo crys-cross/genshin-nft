@@ -1,11 +1,4 @@
-import "@typechain/hardhat"
-import "@nomiclabs/hardhat-waffle"
-import "@nomiclabs/hardhat-etherscan"
-import "@nomiclabs/hardhat-ethers"
-import "hardhat-gas-reporter"
-import "solidity-coverage"
-
-// import "@nomicfoundation/hardhat-toolbox"
+import "@nomicfoundation/hardhat-toolbox"
 import "hardhat-deploy"
 import "hardhat-contract-sizer"
 import "dotenv/config"
