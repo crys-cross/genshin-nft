@@ -45,7 +45,7 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
 
     // VRF Helpers
     mapping(uint256 => address) public s_requestIdToSender;
-    // mapping(address => uint256) public s_playersWishCounter;
+    // mapping(address => uint256) public s_playerss_wishCounter;
 
     // NFT Variables
     uint256 private immutable i_mintFee;
@@ -53,7 +53,10 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     uint256 internal constant MAX_CHANCE_VALUE = 100;
     string[] internal s_characterUris;
     bool private s_initialized;
-    uint256 public wishCounter;
+    uint256 public s_wishCounter;
+    uint256 public s_threeStarCounter;
+    uint256 public s_fiveStarCounter;
+    uint256 public s_fourStarCounter;
     bool public mintEnabled;
 
     // Events
@@ -94,9 +97,9 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         emit NftRequested(requestId, msg.sender);
     }
 
-    //if wishCounter = 90 {run function 5star()}
-    //if wishCounter % 10 {run function check 4star(98)5star(2)}
-    //if wishCounter > 75 && % 10 != 10 {uint256 moddedRng = randomWords[0] % MAX_CHANCE_VALUE;
+    //if s_wishCounter = 90 {run function 5star()}
+    //if s_wishCounter % 10 {run function check 4star(98)5star(2)}
+    //if s_wishCounter > 75 && % 10 != 10 {uint256 moddedRng = randomWords[0] % MAX_CHANCE_VALUE;
     // run function check 5star(1%), 4star(5%), 3star(94%) }
 
     // randomWords[0]- check
@@ -107,20 +110,26 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         uint256 moddedRng1 = randomWords[0] % MAX_CHANCE_VALUE;
         uint256 moddedRng2 = randomWords[0] % MAX_CHANCE_VALUE;
         Characters playersCharacter;
-        if (wishCounter == 90) {
+        if (s_wishCounter == 90) {
+            s_fiveStarCounter += 1;
             playersCharacter = getHardPityCharacter(moddedRng2);
-        } else if (wishCounter % 100 == 10) {
+        } else if (s_wishCounter % 100 == 10) {
             playersCharacter = get10thRateCharacter(moddedRng1, moddedRng2);
-        } else if (wishCounter < 75) {
+        } else if (s_wishCounter < 75) {
             playersCharacter = getRegularCharacter(moddedRng1, moddedRng2);
         } else {
             playersCharacter = getSoftPityCharacter(moddedRng1, moddedRng2);
         }
-        s_tokenCounter += s_tokenCounter;
-        if (uint256(playersCharacter) > 7) {
-            wishCounter = 0;
+        s_tokenCounter += 1;
+        if (uint256(playersCharacter) == 0) {
+            s_threeStarCounter += 1;
+            s_wishCounter += 1;
+        } else if (uint256(playersCharacter) < 8) {
+            s_fourStarCounter += 1;
+            s_wishCounter += 1;
         } else {
-            wishCounter += 1;
+            s_fiveStarCounter += 1;
+            s_wishCounter = 0;
         }
         _safeMint(characterOwner, newItemId);
         _setTokenURI(newItemId, s_characterUris[uint256(playersCharacter)]);
@@ -219,7 +228,7 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         uint256 indexNumber;
         uint256[7] memory chanceArrayFourStars = get4StarChanceArray();
         uint256[6] memory chanceArrayFiveStars = get5StarChanceArray();
-        uint256 rateValue = wishCounter - 74;
+        uint256 rateValue = s_wishCounter - 74;
         if (moddedRng1 % 100 < (95 - (rateValue * 2))) {
             indexNumber = 0;
             return Characters(indexNumber);
@@ -279,15 +288,27 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         return s_tokenCounter;
     }
 
-    function getWishCounter() public view returns (uint256) {
-        return wishCounter;
+    function gets_wishCounter() public view returns (uint256) {
+        return s_wishCounter;
+    }
+
+    function getThreeStarCounter() public view returns (uint256) {
+        return s_threeStarCounter;
+    }
+
+    function getFiveStarCounter() public view returns (uint256) {
+        return s_fiveStarCounter;
+    }
+
+    function getFourStarCounter() public view returns (uint256) {
+        return s_fourStarCounter;
     }
 }
 
 //TODO
-//track players pulls(mapping or array)(wishCounter mapping)
+//track players pulls(mapping or array)(s_wishCounter mapping)
 //guaranteeed 4/5star every 10th pull(2%-4star 98%-3star)
-// wishcounter resets if 5star drawn or 90th pull(since gauranteed 5star)
+// s_wishCounter resets if 5star drawn or 90th pull(since gauranteed 5star)
 //1%-5star 5%-4star 94%-3star
 //randomWords[0] random 3-5star
 //randomWords[1] (choose from 4star)(choose from 5star)
