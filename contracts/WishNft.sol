@@ -288,7 +288,7 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         return s_tokenCounter;
     }
 
-    function gets_wishCounter() public view returns (uint256) {
+    function getWishCounter() public view returns (uint256) {
         return s_wishCounter;
     }
 

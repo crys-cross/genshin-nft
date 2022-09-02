@@ -104,26 +104,26 @@ const deployWishNft: DeployFunction = async (hre: HardhatRuntimeEnvironment) => 
 
     log("----------------------------")
     // await storeImages(imagesLocation)
-    // const args = [
-    //     vrfCoordinatorV2Address,
-    //     networkConfig[chainId]["mintFee"],
-    //     subscriptionId,
-    //     networkConfig[chainId]["gasLane"],
-    //     networkConfig[chainId]["callbackGasLimit"],
-    //     tokenUris,
-    // ]
+    const args = [
+        vrfCoordinatorV2Address,
+        networkConfig[chainId]["mintFee"],
+        subscriptionId,
+        networkConfig[chainId]["gasLane"],
+        networkConfig[chainId]["callbackGasLimit"],
+        tokenUris,
+    ]
 
-    // const wishNft = await deploy("WishNft", {
-    //     from: deployer,
-    //     args: args,
-    //     log: true,
-    //     waitConfirmations: waitBlockConfirmations || 1,
-    // })
-    // log("--------------------------------")
-    // if (chainId != 31337 && process.env.ETHERSCAN_API_KEY) {
-    //     log("Verifying...")
-    //     await verify(wishNft.address, args)
-    // }
+    const wishNft = await deploy("WishNft", {
+        from: deployer,
+        args: args,
+        log: true,
+        waitConfirmations: waitBlockConfirmations || 1,
+    })
+    log("--------------------------------")
+    if (chainId != 31337 && process.env.ETHERSCAN_API_KEY) {
+        log("Verifying...")
+        await verify(wishNft.address, args)
+    }
 }
 
 const handleTokenUris = async () => {
