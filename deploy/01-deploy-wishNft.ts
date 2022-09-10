@@ -151,7 +151,7 @@ const handleTokenUris = async () => {
     return tokenUris
 }
 export default deployWishNft
-deployWishNft.tags = ["all", "randomipfs", "main"]
+deployWishNft.tags = ["all", "wish", "main"]
 
 // Lumine
 // 'ipfs://QmSL1Yuc7KDUEH19WSDNHZ9F9rRBe4ytMcUjEvx26HrUDr'
