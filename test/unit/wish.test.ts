@@ -10,7 +10,7 @@ import { WishNft, VRFCoordinatorV2Mock } from "../../typechain-types"
     : describe("WishNft Unit Test", () => {
           let wishNftPlayer: WishNft
           let wishNftContract: WishNft
-          let wishNftDeployer: WishNft
+          let wishNftOwner: WishNft
           let vrfCoordinatorV2Mock: VRFCoordinatorV2Mock
           let mintFee: BigNumber
           let accounts: SignerWithAddress[]
@@ -18,16 +18,16 @@ import { WishNft, VRFCoordinatorV2Mock } from "../../typechain-types"
           let player: SignerWithAddress
 
           beforeEach(async () => {
-              accounts = await ethers.getSigners() //could also be done with getNamedAccounts
+              accounts = await ethers.getSigners()
               deployer = accounts[0]
               player = accounts[1]
               await deployments.fixture(["mocks", "wish"])
               vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
-              wishNftContract = await ethers.getContract("LotteryTrio")
-              wishNftDeployer = wishNftContract.connect(deployer)
+              wishNftContract = await ethers.getContract("WishNft")
+              wishNftOwner = wishNftContract.connect(deployer)
               wishNftPlayer = wishNftContract.connect(player)
               mintFee = await wishNftPlayer.getMintFee()
-              await wishNftDeployer.mintSwitch(true)
+              await wishNftOwner.mintSwitch(true)
           })
           describe("constructor", async () => {
               it("sets starting values correctly", async () => {
@@ -39,13 +39,14 @@ import { WishNft, VRFCoordinatorV2Mock } from "../../typechain-types"
           })
           describe("wishBannerNft", async () => {
               it("fails if mintSwitch is disabled", async () => {
-                  await wishNftDeployer.mintSwitch(false)
+                  await wishNftOwner.mintSwitch(false)
                   await expect(
                       wishNftPlayer.wishBannerNft({ value: mintFee.toString() })
-                  ).to.be.revertedWith("WishNft__MintSwitchedOffbyOwner")
+                  ).to.be.revertedWithCustomError(wishNftOwner, "WishNft__MintSwitchedOffbyOwner")
               })
               it("fails if not enought ETH sent", async () => {
-                  await expect(wishNftPlayer.wishBannerNft()).to.be.revertedWith(
+                  await expect(wishNftPlayer.wishBannerNft()).to.be.revertedWithCustomError(
+                      wishNftPlayer,
                       "WishNft__NeedMoreETHSennt"
                   )
               })
@@ -80,29 +81,11 @@ import { WishNft, VRFCoordinatorV2Mock } from "../../typechain-types"
                       }
                   })
               })
-              describe("getHardPityCharacter", async () => {
-                  it("description", async () => {
-                      //a
-                  })
-              })
-              describe("get10thRateCharacter", async () => {
-                  it("description", async () => {
-                      //a
-                  })
-              })
-              describe("getRegularCharacter", async () => {
-                  it("description", async () => {
-                      //a
-                  })
-              })
-              describe("getSoftPityCharacter", async () => {
-                  it("description", async () => {
-                      //a
-                  })
-              })
-              describe("_initializeContract", async () => {
-                  it("description", async () => {
-                      //a
+              describe("withdraw", async () => {
+                  it("only owner can withdraw", async () => {
+                      await wishNftOwner.withdraw()
+                      const balance = await ethers.provider.getBalance(wishNftContract.address)
+                      assert.equal(balance.toString(), "0")
                   })
               })
           })

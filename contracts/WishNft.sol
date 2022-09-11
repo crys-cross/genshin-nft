@@ -13,11 +13,18 @@ error WishNft__AlreadyInitialized();
 error WishNft__TransferFailed();
 error WishNft__MintSwitchedOffbyOwner();
 
+/**
+ *  @title BLOCKCHAIN GENSHIN NFT
+ *  @author crys
+ *  @notice This is demo smartcontract game using very similar wish mechanics to the Genshin Game
+ *  @dev This uses Chainlink VRF for randomizaton and some math
+ *  to simulate as close as possible rates to the genshin game.
+ *  Characters[0]-3stars, Characters[1-7]-4stars, Characters[8-13]-5stars
+ *  4-star rate up 20%[ collei, beidou , sayu] and 10%[ lisa, ningguang, barbara, noelle]
+ *  5-star rate up(50%)[nahida] and 5 regular(10% each) 5-stars[kokomi, qiqi, yae, hutao, ayaka]
+ **/
 contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     // Types
-    // 4star rate up 20%[ collei, beidou , sayu] and 10%[ lisa, ningguang, barbara, noelle]
-    // 1 event 5star(%)[nahida] and 5 regular 5stars[KOKOMI, qiqi, yae, hutao, ayayaka]
-    // Characters[0]-3stars, Characters[1-7]-4stars, Characters[8-13]-5stars
     enum Characters {
         LUMINE,
         COLLEI,
@@ -106,7 +113,6 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {
         address characterOwner = s_requestIdToSender[requestId];
         uint256 newItemId = s_tokenCounter;
-        s_tokenCounter = s_tokenCounter + 1;
         uint256 moddedRng1 = randomWords[0] % MAX_CHANCE_VALUE;
         uint256 moddedRng2 = randomWords[0] % MAX_CHANCE_VALUE;
         Characters playersCharacter;
@@ -234,7 +240,6 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
             return Characters(indexNumber);
         } else if (moddedRng1 % 100 < 100) {
             for (uint256 i = 0; i < chanceArrayFourStars.length; i++) {
-                // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
                 if (moddedRng2 <= chanceArrayFourStars[i]) {
                     indexNumber = i + 1;
                     return Characters(indexNumber);
@@ -242,7 +247,6 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
             }
         } else if (moddedRng1 % 100 >= (100 - (rateValue * 2))) {
             for (uint256 i = 0; i < chanceArrayFiveStars.length; i++) {
-                // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
                 if (moddedRng2 <= chanceArrayFourStars[i]) {
                     indexNumber = i + 9;
                     return Characters(indexNumber);
@@ -252,16 +256,9 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         revert WishNft__RangeOutOfBounds();
     }
 
+    /*enable/disable mint here*/
     function mintSwitch(bool _mintEnabled) external onlyOwner {
         mintEnabled = _mintEnabled; //it allows us to change true or false
-    }
-
-    function withdraw() public onlyOwner {
-        uint256 amount = address(this).balance;
-        (bool success, ) = payable(msg.sender).call{value: amount}("");
-        if (!success) {
-            revert WishNft__TransferFailed();
-        }
     }
 
     function _initializeContract(string[14] memory characterUris) private {
@@ -270,6 +267,20 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         }
         s_characterUris = characterUris;
         s_initialized = true;
+    }
+
+    /*withdraw function for admin*/
+    function withdraw() public onlyOwner {
+        uint256 amount = address(this).balance;
+        (bool success, ) = payable(msg.sender).call{value: amount}("");
+        if (!success) {
+            revert WishNft__TransferFailed();
+        }
+    }
+
+    /*View/Pure Functions*/
+    function getIsMintSwitchEnabled() public view returns (bool) {
+        return mintEnabled;
     }
 
     function getMintFee() public view returns (uint256) {
