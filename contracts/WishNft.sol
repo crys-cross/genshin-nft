@@ -108,13 +108,11 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
     //if s_wishCounter % 10 {run function check 4star(98)5star(2)}
     //if s_wishCounter > 75 && % 10 != 10 {uint256 moddedRng = randomWords[0] % MAX_CHANCE_VALUE;
     // run function check 5star(1%), 4star(5%), 3star(94%) }
-
-    // randomWords[0]- check
     function fulfillRandomWords(uint256 requestId, uint256[] memory randomWords) internal override {
         address characterOwner = s_requestIdToSender[requestId];
         uint256 newItemId = s_tokenCounter;
         uint256 moddedRng1 = randomWords[0] % MAX_CHANCE_VALUE;
-        uint256 moddedRng2 = randomWords[0] % MAX_CHANCE_VALUE;
+        uint256 moddedRng2 = randomWords[1] % MAX_CHANCE_VALUE;
         Characters playersCharacter;
         if (s_wishCounter == 90) {
             s_fiveStarCounter += 1;
@@ -175,7 +173,6 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         uint256[6] memory chanceArrayFiveStars = get5StarChanceArray();
         if (moddedRng1 % 100 < 99) {
             for (uint256 i = 0; i < chanceArrayFourStars.length; i++) {
-                // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
                 if (moddedRng2 <= chanceArrayFourStars[i]) {
                     indexNumber = i + 1;
                     return Characters(indexNumber);
@@ -183,7 +180,6 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
             }
         } else {
             for (uint256 i = 0; i < chanceArrayFiveStars.length; i++) {
-                // if (moddedRng >= cumulativeSum && moddedRng < cumulativeSum + chanceArray[i]) {
                 if (moddedRng2 <= chanceArrayFiveStars[i]) {
                     indexNumber = i + 8;
                     return Characters(indexNumber);
@@ -278,6 +274,11 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         }
     }
 
+    /*for experimental burn nft*/
+    function stellaF(uint256 tokenId) public {
+        _burn(tokenId);
+    }
+
     /*View/Pure Functions*/
     function getIsMintSwitchEnabled() public view returns (bool) {
         return mintEnabled;
@@ -315,11 +316,3 @@ contract WishNft is VRFConsumerBaseV2, ERC721URIStorage, Ownable {
         return s_fourStarCounter;
     }
 }
-
-//TODO
-//track players pulls(mapping or array)(s_wishCounter mapping)
-//guaranteeed 4/5star every 10th pull(2%-4star 98%-3star)
-// s_wishCounter resets if 5star drawn or 90th pull(since gauranteed 5star)
-//1%-5star 5%-4star 94%-3star
-//randomWords[0] random 3-5star
-//randomWords[1] (choose from 4star)(choose from 5star)
