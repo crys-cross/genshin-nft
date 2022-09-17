@@ -81,6 +81,56 @@ import { WishNft, VRFCoordinatorV2Mock } from "../../typechain-types"
                       }
                   })
               })
+              it("triggers", async () => {
+                  await new Promise<void>(async (resolve, reject) => {
+                      wishNftPlayer.once("NftMinted", async () => {
+                          try {
+                              //   const triggerA = await wishNftPlayer.triggerA()
+                              //   const trigger1 = await wishNftPlayer.trigger1()
+                              //   const trigger2 = await wishNftPlayer.trigger2()
+                              //   const trigger3 = await wishNftPlayer.trigger3()
+                              //   const trigger4 = await wishNftPlayer.trigger4()
+                              const star3 = await wishNftPlayer.getThreeStarCounter()
+                              const star4 = await wishNftPlayer.getFourStarCounter()
+                              const star5 = await wishNftPlayer.getFiveStarCounter()
+                              const wishCounter = await wishNftPlayer.getWishCounter()
+                              const tokenCounter = await wishNftPlayer.getTokenCounter()
+                              //   console.log(`triggerA is: ${triggerA}`)
+                              //   console.log(`trigger1 is: ${trigger1}`)
+                              //   console.log(`trigger2 is: ${trigger2}`)
+                              //   console.log(`trigger3 is: ${trigger3}`)
+                              //   console.log(`trigger4 is: ${trigger4}`)
+                              console.log(`star3 is: ${star3}`)
+                              console.log(`star4 is: ${star4}`)
+                              console.log(`star5 is: ${star5}`)
+                              console.log(`wishCounter is: ${wishCounter}`)
+                              console.log(`tokenCounter is: ${tokenCounter}`)
+
+                              assert.equal(tokenCounter.toString(), "11")
+                              resolve()
+                          } catch (e) {
+                              console.log(e)
+                              reject(e)
+                          }
+                      })
+                      try {
+                          for (let i = 0; i < 11; i++) {
+                              const requestNftResponse = await wishNftPlayer.wishBannerNft({
+                                  value: mintFee.toString(),
+                              })
+                              const requestNftReceipt = await requestNftResponse.wait(1)
+                              await vrfCoordinatorV2Mock.fulfillRandomWords(
+                                  requestNftReceipt.events![1].args!.requestId,
+                                  wishNftPlayer.address
+                              )
+                          }
+                      } catch (e) {
+                          console.log(e)
+                          reject(e)
+                      }
+                  })
+              })
+
               describe("withdraw", async () => {
                   it("only owner can withdraw", async () => {
                       await wishNftOwner.withdraw()

@@ -41,6 +41,9 @@ const config: HardhatUserConfig = {
             url: "https://rpc.testnet.fantom.network" || "",
             accounts: [PRIVATE_KEY],
             chainId: 4002,
+            // chainId: 0xfa2,
+            live: false,
+            gasMultiplier: 2,
         },
         fujitest: {
             url: "https://api.avax-test.network/ext/bc/C/rpc" || "",
@@ -106,6 +109,9 @@ const config: HardhatUserConfig = {
         user: {
             default: 1,
         },
+    },
+    mocha: {
+        timeout: 40000, //4000 seconds
     },
 }
 export default config
