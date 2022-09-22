@@ -1,8 +1,8 @@
 #Genshin NFT
 
 ##Dapp link
-Please visit link below to test the dapp.
-DAPP: https://snowy-shadow-7712.on.fleek.co/
+- Please visit link below to test the dapp.
+- DAPP: https://snowy-shadow-7712.on.fleek.co/
 
 ##About
 This is Inspired from Genshin Impact Wish system. All trademarks and copyrights belong to Hoyoverse. This is for demo purpose to showcase the wish system on a blockchain and producing an NFT instead of just an ingame Character/Item. This follows a Gacha Mechanics pity system based on the said game based on the number of wishes. More details of the rate to follow.
@@ -30,7 +30,7 @@ Press Mint Button in order to Wish for Characters
 
 1. Hardhat
 2. Chainlink VRF
-3. Chainlink Keepers
+3. Openzeppelin erc721
 
 ##Notes
 This is all a draft and is subjected to change as needed until build finalization.
