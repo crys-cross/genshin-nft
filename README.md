@@ -1,5 +1,9 @@
 #Genshin NFT
 
+##Dapp link
+Please visit link below to test the dapp.
+DAPP: https://snowy-shadow-7712.on.fleek.co/
+
 ##About
 This is Inspired from Genshin Impact Wish system. All trademarks and copyrights belong to Hoyoverse. This is for demo purpose to showcase the wish system on a blockchain and producing an NFT instead of just an ingame Character/Item. This follows a Gacha Mechanics pity system based on the said game based on the number of wishes. More details of the rate to follow.
 
